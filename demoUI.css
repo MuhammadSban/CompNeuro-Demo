@@ -1,4 +1,323 @@
-#infoTag {
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@400;500&display=swap');
+
+body {
+    background-color: rgb(26, 26, 31);
+    zoom: 0.5;
+}
+
+:root {
+    --surface:  rgb(63, 69, 80);
+    --border:   rgba(255, 255, 255, 0.1);
+    --text-1:   #ffffff;
+    --text-2:   rgba(255, 255, 255, 0.6);
+    --accent:   rgba(18, 18, 21, 0.754);
+}
+
+.buttons {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+}
+
+label .infoTag,
+label .Model,
+label > div:not(.buttonText) {
+    display: none;
+}
+
+.inputRad{
+    display: none;
+}
+
+
+label {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: 0.25s;
+}
+
+.topPanel {
+    justify-content: center;
+    flex: 1;
+    background-color: rgb(36, 39, 46);
+}
+
+.buttonText{
+    font-family: 'Syne';
+    align-items: center;
     text-align: center;
-    
+    margin: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    height: 12vh;
+    justify-content: center;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    background: none;
+    color: white;
+    font-size: 2.4rem;
+    transition: 0.25s;
+}
+
+input:checked + label {
+    background-color: rgb(255, 198, 42);
+}
+
+input:checked + label .infoTag,
+input:checked + label .Model,
+input:checked + label > div:not(.buttonText):not(.nncont){
+    display: block;
+    position: absolute;
+    left: 0;
+    top: calc(8vh + 20px);   
+    width: 100%;
+    margin: 50px;
+    box-sizing: border-box;
+}
+
+input:checked + label .nncont{
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: calc(8vh + 20px);   
+    width: 100%;
+    margin: 50px;
+    box-sizing: border-box;
+}
+
+
+input:checked + label .buttonText{
+    background: none;
+    color:black;
+    font-size: 45px;
+    font-weight: bold;
+}
+
+
+
+
+.infoTag {
+    text-align: center;
+    background-color: rgb(63, 69, 80);
+    font-size: 30px;
+    position: relative;
+    width: 80%;
+    height: fit-content;
+    color: white;
+    padding: 10rem;
+    margin: 40px;
+    border-radius: 16px;
+    flex-direction: column;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.Model {
+    text-align: center;
+    background-color: rgb(63, 69, 80);
+    font-size: 30px;
+    color: white;
+    width: auto;
+    height: fit-content;
+    border-radius: 16px;
+    margin: 40px;
+}
+
+/*Calculator Things */
+.calcDisp {
+    font-size: 60px;
+    color:red;
+    width: 80%;
+    padding: 1%;
+    margin: 0 auto;
+
+    height: fit-content;
+    background-color:black;
+    justify-content: center;
+}
+.calcButton {
+    font-size: 30pt;
+    font-weight: 1000;
+    background-color: whitesmoke;
+    width: 9%;
+    height: 15vh;
+    border-radius: 30%;
+    border-color: black;
+    border-width: 10px;
+    cursor: pointer;
+}
+
+.dummyb {
+    visibility: hidden;
+    background:none;
+    width: 100px;
+    height: 100px;
+}
+
+.calcButton:active {
+    background-color: hsl(46, 100%, 55%);
+}
+
+
+/*Neural Network Interface Stuff*/
+
+.nntitle {
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+.nncont {
+    background-color: rgb(35, 42, 60);
+    height: fit-content;
+    width: 80%;
+    position: relative;
+    color:rgb(255, 255, 255);
+    font-size: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    padding: 3%;
+    border-radius: 2%;
+}
+
+.nncolumn {
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+
+.modelRend {
+    background-color: black;
+    width: 80%;
+    margin: 40px;
+    padding: 2%;
+    height: 60vh;
+    display: flex;
+    border-radius: 10px;
+}
+
+.sliderContainer {
+    display:flex;
+    width:fit-content;
+    margin: 40px;
+    padding: 2%;
+    background-color:#1e1e24;
+    border-radius: 20px;
+}
+
+.slider {
+    -webkit-appearance: none;
+
+    background-color: rgb(201, 196, 196);
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 40px;
+    margin: 40px;
+    height: 200px;
+    border-radius: 5px;
+    cursor:pointer;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 50px;
+    height: 20px;
+    background-color: rgb(79, 52, 158);
+    border-radius: 5px;
+}
+
+/*BMI Calc Stuff, TO REMOVE*/ 
+
+#BMICalc {
+    text-align: center;
+    width: auto;
+    margin: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+}
+
+#BMICalc h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 1.5rem;
+}
+
+#BMICalc label {
+    color: var(--text-2);
+    font-size: 1.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+#BMICalc input[type="number"] {
+    background: #1e1e24;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-1);
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    padding: 0.6rem 0.75rem;
+    width: 15%;
+    outline: none;
+    margin: 0 0.25rem;
+    -moz-appearance: textfield;
+    transition: border-color 0.2s ease;
+}
+
+#BMICalc input[type="number"]::-webkit-outer-spin-button,
+#BMICalc input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+#BMICalc input[type="number"]:focus {
+    border-color: rgba(232, 201, 122, 0.5);
+}
+
+#BMICalc button {
+    display: block;
+    width: 15%;
+    margin: 3rem auto 0;
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 4rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#BMICalc button:hover {
+    background: #f0d68a;
+    transform: translateY(-2px);
+}
+
+#BMICalc button:active {
+    transform: translateY(0);
+}
+
+#bmicalcd {
+    font-family: 'Syne', sans-serif;
+    font-weight: bold;
+    font-size: 6rem;
+    color: var(--text-1);
+    text-align: center;
+    min-height: 5em;
 }

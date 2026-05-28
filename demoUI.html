@@ -1,27 +1,156 @@
 <!DOCTYPE html>
 
-<head>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="demoUI.css">
+    <script src="BMI.js"></script>
+    <script src="calculator.js"></script>
 </head>
 
 <body>
+
+    <!-- Header UI / Page Select / Options -->
+<div class = 'buttons'> 
     <!-- Home Page / Public Facing Info, Maybe Small Visual Demo  -->
-    <div>
+        <div class = 'topPanel'>
+                <input type= "radio" name = "cont" id = "1" value = "Home" checked class = "inputRad">
+                <label for="1">
+                        <div class = 'buttonText'> 
+                                Home
+                        </div>
+                        <div class = 'infoTag'>
+                                Our lab applies artificial neural networks, statistical modeling, information theory, 
+                                and the like to problems in neuroscience. The aim is to make testable predictions about 
+                                neural function and dysfunction; to guide the design of experiment; to derive principles 
+                                for machine learning from animal learning; and ultimately to improve our understanding of
+                                 the brain and to ameliorate neurological disorders in people.
+                                <ul>
+                                        <li> This is what a list item looks like </li>
+
+                                        <li> More can be added </li>
+
+                                        <li> More to be added </li>
+                                </ul>
+                        </div>
+                </label>
+        </div>
+                <!-- Train an NN!-->  
+        <div class = 'topPanel'>
+                <input type= "radio" name = "cont" id = "2" value = "Train" class = "inputRad">
+                <label for="2">
+                        <div class = 'buttonText'> 
+                                Train an NN!
+                        </div>
+                            <!-- Neural Network Training-->
+                        <div class = 'nncont'>
+                                <div class = 'nntitle'>Do something cool!</div>
+                                <div class = 'nncolumn'>
+                                        <div class = 'modelRend'>
+                                                here
+                                        </div>
+                                        <div class = 'sliderContainer'>
+                                                <input type="range" id="paramone" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramtwo" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramthr" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramfou" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramfiv" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramsix]" min="0" max="100" value="50" class="slider">
+                                        </div>
+                                </div>
+                                <div class = 'nncolumn'>
+                                        <div class = 'modelRend'>
+                                                two
+                                        </div>
+                                        <div class = 'sliderContainer'>
+                                                <input type="range" id="paramone" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramtwo" min="0" max="100" value="50" class="slider">
+                                                <input type="range" id="paramthr" min="0" max="100" value="50" class="slider">
+                                        </div>
+                                </div>
+                        </div>
+                </label>
+        </div>
         
-    </div>
+                <!-- 3D Display-->
+        <!-- Home-->
+        <div class = 'topPanel'>
+                <input type= "radio" name = "cont" id = "3" value = "Display" class = "inputRad">
+                <label for="3">
+                        <div class = 'buttonText'> 
+                                Interactive 3D Display
+                        </div>
+                            <!-- Interactive 3D Model, -->
+                        <div class = 'Model'>
+                                <div id = "BMICalc">
+                                        <h1> BMI Calculator! </h1>
 
-    <!-- Neural Network Training-->
-    <div>
+                                        <label for="weight"> Weight (lbs) </label>
+                                        <input type="number" id = "weight" placeholder="ex. 150"/>
 
-    </div>
+                                        <br>
 
-    <!-- Interactive 3D Model, -->
-     <div>
+                                        <label for="height"> Height (ft) </label>
+                                        <input type="number" id = "height" placeholder="ex. 5"/>
 
-     </div>
+                                        <label for="heightin"> (in) </label>
+                                        <input type="number" id = "heightin" placeholder="ex. 6"/>
 
-     <!-- Toy Problems? Something like that-->
-      <div>
+                                        <br>
 
-      </div>
+                                        <button onclick="calculateBMI()">Calculate</button>
+
+                                        </div>
+                                        <p id="bmicalcd"></p>
+
+                                        </div>
+                                        </label>
+                </div>
+
+                <!-- Something Else-->  
+        <!-- Home-->
+        <div class = 'topPanel'>
+                <input type= "radio" name = "cont" id = "4" value = "Something" class = "inputRad">
+                <label for="4">
+                        <div class = 'buttonText'> 
+                                Something Else!
+                        </div>
+                             <!-- Toy Problems? Something like that-->
+                        <div class = "infoTag">
+                                <h2>Calculator!</h2>
+                                <br>
+                                <div class="calcDisp" id = "calcDisp">
+                                        0
+                                </div>
+                                <br>
+                                <input type="button" value="1" class = calcButton onclick="pressButton('1')">
+                                <input type="button" value="2" class = calcButton onclick="pressButton('2')">
+                                <input type="button" value="3" class = calcButton onclick="pressButton('3')">
+                                <input type="button" value="+" class = calcButton onclick="pressButton('+')">
+                                <br>
+                                <input type="button" value="4" class = calcButton onclick="pressButton('4')">
+                                <input type="button" value="5" class = calcButton onclick="pressButton('5')">
+                                <input type="button" value="6" class = calcButton onclick="pressButton('6')">
+                                <input type="button" value="-" class = calcButton onclick="pressButton('-')">
+                                <br>
+                                <input type="button" value="7" class = calcButton onclick="pressButton('7')">
+                                <input type="button" value="8" class = calcButton onclick="pressButton('8')">
+                                <input type="button" value="9" class = calcButton onclick="pressButton('9')">
+                                <input type="button" value="x" class = calcButton onclick="pressButton('x')">
+                                <br>
+                                <input type="button" value="." class = calcButton onclick="pressButton('.')">
+                                <input type="button" value="0" class = calcButton onclick="pressButton('0')">
+                                <input type="button" value="=" class = calcButton onclick="pressButton('=')">
+                                <input type="button" value="÷" class = calcButton onclick="pressButton('÷')">
+                                <br>
+                                <input type="button" value="C" class = calcButton onclick="pressButton('C')">
+
+                        </div>
+                </label>
+        </div>
+</div>
 </body>
+
+</html>
