@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo: Vertex Coloring Heatmap</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: rgb(26,26,31); color: white; font-family: 'DM Mono', monospace;
+           overflow: hidden; }
+
+    #container3D { position: fixed; inset: 0; }
+
+    /* ── HUD overlay ── */
+    #hud {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(26,26,31,0.95), transparent);
+      pointer-events: none;
+    }
+    #hud h1   { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800;
+                color: rgb(255,198,42); letter-spacing: -0.02em; }
+    #hud .tag { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+    /* legend */
+    #legend-wrap {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+    }
+    #legend       { width: 160px; height: 12px; border-radius: 6px; }
+    .legend-labels { display: flex; justify-content: space-between; width: 160px;
+                     font-size: 0.65rem; color: rgba(255,255,255,0.45); }
+
+    /* status */
+    #status {
+      position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+      font-size: 0.75rem; color: rgba(255,255,255,0.4);
+      background: rgba(26,26,31,0.7); padding: 4px 12px; border-radius: 20px;
+    }
+
+    /* annotation panel */
+    #info {
+      position: fixed; bottom: 1rem; right: 1.5rem; width: 260px;
+      background: rgba(36,39,46,0.9); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 1rem; font-size: 0.72rem;
+      color: rgba(255,255,255,0.55); line-height: 1.6;
+      pointer-events: none;
+    }
+    #info strong { color: rgb(255,198,42); display: block; margin-bottom: 6px;
+                   font-family: 'Syne', sans-serif; font-size: 0.8rem; }
+
+    /* back link */
+    #back {
+      position: fixed; bottom: 1rem; left: 1.5rem;
+      font-size: 0.75rem; color: rgba(255,255,255,0.4);
+      text-decoration: none; background: rgba(36,39,46,0.8);
+      padding: 4px 12px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: color 0.2s;
+    }
+    #back:hover { color: rgb(255,198,42); }
+  </style>
+</head>
+<body>
+  <div id="container3D"></div>
+
+  <div id="hud">
+    <div>
+      <h1>Approach 1 — Vertex Coloring</h1>
+      <div class="tag">IDW interpolation · JavaScript CPU pass · BufferAttribute</div>
+    </div>
+    <div id="legend-wrap">
+      <canvas id="legend" width="160" height="12"></canvas>
+      <div class="legend-labels"><span>low</span><span>activity</span><span>high</span></div>
+    </div>
+  </div>
+
+  <div id="info">
+    <strong>How it works</strong>
+    Each mesh vertex is coloured by inverse-distance-weighted blending of the
+    nearest electrode values. Three.js interpolates across triangle faces via the
+    rasterizer for free. Colors are stored in <code>geometry.attributes.color</code>;
+    set <code>.needsUpdate = true</code> to stream new data each frame.
+  </div>
+
+  <span id="status">Loading…</span>
+  <a id="back" href="../index.html">← back to demos</a>
+
+  <script src="3D-vertex.js" type="module"></script>
+</body>
+</html>

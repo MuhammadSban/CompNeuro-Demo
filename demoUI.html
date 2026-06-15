@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="demoUI.css">
     <script src="BMI.js"></script>
     <script src="calculator.js"></script>
+    <title> Computational Neuroscience </title>
 </head>
 
 <body>
@@ -80,34 +81,78 @@
                 <input type= "radio" name = "cont" id = "3" value = "Display" class = "inputRad">
                 <label for="3">
                         <div class = 'buttonText'> 
-                                Interactive 3D Display
+                        Interactive 3D Display
                         </div>
-                            <!-- Interactive 3D Model, -->
-                        <div class = 'Model'>
-                                <div id = "BMICalc">
-                                        <h1> BMI Calculator! </h1>
 
-                                        <label for="weight"> Weight (lbs) </label>
-                                        <input type="number" id = "weight" placeholder="ex. 150"/>
+                        <!-- Interactive 3D Model + Training Parameter Controls -->
+                        <div class="display3D">
+                                <div id="container3D"></div>
 
-                                        <br>
+                                <div class="sliderPanel">
+                                        <div class="sliderPanelTitle">Model Parameters</div>
 
-                                        <label for="height"> Height (ft) </label>
-                                        <input type="number" id = "height" placeholder="ex. 5"/>
+                                        <div class="sliderContainer">
 
-                                        <label for="heightin"> (in) </label>
-                                        <input type="number" id = "heightin" placeholder="ex. 6"/>
+                                                <!-- Epochs: 1–20 -->
+                                                <div class="sliderGroup">
+                                                        <span class="sliderVal" id="epochsVal">10</span>
+                                                        <input type="range" id="epochs" min="1" max="20" value="10" class="slider"
+                                                               oninput="document.getElementById('epochsVal').textContent=this.value">
+                                                        <span class="sliderLabel">Epochs</span>
+                                                </div>
 
-                                        <br>
+                                                <!-- Decoder Embedding dim: 1–200 -->
+                                                <div class="sliderGroup">
+                                                        <span class="sliderVal" id="decEmbedVal">100</span>
+                                                        <input type="range" id="decEmbed" min="1" max="200" value="100" class="slider"
+                                                               oninput="document.getElementById('decEmbedVal').textContent=this.value">
+                                                        <span class="sliderLabel">Dec. Embed</span>
+                                                </div>
 
-                                        <button onclick="calculateBMI()">Calculate</button>
+                                                <!-- Decoder RNN units: 1–800 -->
+                                                <div class="sliderGroup">
+                                                        <span class="sliderVal" id="decRNNVal">400</span>
+                                                        <input type="range" id="decRNN" min="1" max="800" value="400" class="slider"
+                                                               oninput="document.getElementById('decRNNVal').textContent=this.value">
+                                                        <span class="sliderLabel">Dec. RNN</span>
+                                                </div>
 
-                                        </div>
-                                        <p id="bmicalcd"></p>
+                                                <!-- Learning Rate — range/encoding TBD -->
+                                                <div class="sliderGroup">
+                                                        <span class="sliderVal" id="lrVal">—</span>
+                                                        <input type="range" id="lr" min="0" max="100" value="50" class="slider"
+                                                               disabled
+                                                               oninput="document.getElementById('lrVal').textContent=this.value">
+                                                        <span class="sliderLabel sliderLabelTbd">LR (TBD)</span>
+                                                </div>
 
-                                        </div>
-                                        </label>
-                </div>
+                                                <!-- Param 5 — unlabelled, configurable later -->
+                                                <div class="sliderGroup">
+                                                        <span class="sliderVal" id="param5Val">—</span>
+                                                        <input type="range" id="param5" min="0" max="100" value="50" class="slider"
+                                                               disabled
+                                                               oninput="document.getElementById('param5Val').textContent=this.value">
+                                                        <span class="sliderLabel sliderLabelTbd">—</span>
+                                                </div>
+
+                                                <!-- Param 6 — unlabelled, configurable later -->
+                                                <div class="sliderGroup">
+                                                        <span class="sliderVal" id="param6Val">—</span>
+                                                        <input type="range" id="param6" min="0" max="100" value="50" class="slider"
+                                                               disabled
+                                                               oninput="document.getElementById('param6Val').textContent=this.value">
+                                                        <span class="sliderLabel sliderLabelTbd">—</span>
+                                                </div>
+
+                                        </div><!-- /sliderContainer -->
+
+                                        <button class="runBtn" id="runModelBtn">Run Model</button>
+
+                                </div><!-- /sliderPanel -->
+                        </div><!-- /display3D -->
+                </label>
+                <script src="3D.js" type="module"></script>
+        </div>
 
                 <!-- Something Else-->  
         <!-- Home-->
@@ -146,11 +191,42 @@
                                 <input type="button" value="÷" class = calcButton onclick="pressButton('÷')">
                                 <br>
                                 <input type="button" value="C" class = calcButton onclick="pressButton('C')">
+                                <br>
 
+                        </div>
+                </label>
+        </div>
+
+        <div class = 'topPanel'>
+                <input type= "radio" name = "cont" id = "5" value = "Something" class = "inputRad">
+                <label for="5">
+                        <div class = 'buttonText'> 
+                                Something Else!
+                        </div>
+                        <div class = 'Model'>
+                                <div id = "BMICalc">
+                                        <h1> BMI Calculator! </h1>
+
+                                        <label for="weight"> Weight (lbs) </label>
+                                        <input type="number" id = "weight" placeholder="ex. 150"/>
+
+                                        <br>
+
+                                        <label for="height"> Height (ft) </label>
+                                        <input type="number" id = "height" placeholder="ex. 5"/>
+
+                                        <label for="heightin"> (in) </label>
+                                        <input type="number" id = "heightin" placeholder="ex. 6"/>
+
+                                        <br>
+
+                                        <button onclick="calculateBMI()">Calculate</button>
+
+                                </div>
+                                <p id="bmicalcd"></p>
                         </div>
                 </label>
         </div>
 </div>
 </body>
-
 </html>

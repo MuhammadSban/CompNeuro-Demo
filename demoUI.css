@@ -2,7 +2,8 @@
 
 body {
     background-color: rgb(26, 26, 31);
-    zoom: 0.5;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 :root {
@@ -14,6 +15,7 @@ body {
 }
 
 .buttons {
+    height: 80vh;
     display: flex;
     position: relative;
     align-items: flex-start;
@@ -42,8 +44,12 @@ label {
 
 .topPanel {
     justify-content: center;
+    margin: 2px;
     flex: 1;
+    border-radius: 10px;
+    transition: background 0.2s;
     background-color: rgb(36, 39, 46);
+    border-right: 1px solid rgba(255,255,255,0.06);
 }
 
 .buttonText{
@@ -53,19 +59,22 @@ label {
     margin: 10px;
     padding: 5px;
     border-radius: 10px;
-    height: 12vh;
+    height: 64px;
     justify-content: center;
     box-sizing: border-box;
     cursor: pointer;
 
     background: none;
     color: white;
-    font-size: 2.4rem;
+    font-weight: 600;
+    font-size: 1.1rem;
     transition: 0.25s;
 }
 
 input:checked + label {
+    z-index: 9999;
     background-color: rgb(255, 198, 42);
+    border-left: 3px solid rgb(255,198,42);
 }
 
 input:checked + label .infoTag,
@@ -73,29 +82,32 @@ input:checked + label .Model,
 input:checked + label > div:not(.buttonText):not(.nncont){
     display: block;
     position: absolute;
-    left: 0;
-    top: calc(8vh + 20px);   
-    width: 100%;
-    margin: 50px;
+    top: 64px;
+    left: 5%;   
+    width: 90%;
+    margin-top: 5rem;
+    margin: 0auto;
     box-sizing: border-box;
 }
 
 input:checked + label .nncont{
     display: flex;
     position: absolute;
-    left: 0;
-    top: calc(8vh + 20px);   
-    width: 100%;
-    margin: 50px;
+    top: 64px;
+    left: 5%;   
+    width: 90%;
+    margin-top: 5rem;
+    margin: 0auto;
     box-sizing: border-box;
 }
 
 
 input:checked + label .buttonText{
+    z-index: 9999;
     background: none;
     color:black;
-    font-size: 45px;
-    font-weight: bold;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 
@@ -104,13 +116,12 @@ input:checked + label .buttonText{
 .infoTag {
     text-align: center;
     background-color: rgb(63, 69, 80);
-    font-size: 30px;
+    font-size: 1rem;
     position: relative;
     width: 80%;
     height: fit-content;
     color: white;
-    padding: 10rem;
-    margin: 40px;
+    padding: 1rem;
     border-radius: 16px;
     flex-direction: column;
     justify-content: space-around;
@@ -141,11 +152,11 @@ input:checked + label .buttonText{
     justify-content: center;
 }
 .calcButton {
-    font-size: 30pt;
+    font-size: 2rem;
     font-weight: 1000;
     background-color: whitesmoke;
-    width: 9%;
-    height: 15vh;
+    width: 6%;
+    aspect-ratio: 1;
     border-radius: 30%;
     border-color: black;
     border-width: 10px;
@@ -206,12 +217,12 @@ input:checked + label .buttonText{
 }
 
 .sliderContainer {
-    display:flex;
     width:fit-content;
     margin: 40px;
     padding: 2%;
     background-color:#1e1e24;
     border-radius: 20px;
+    position:relative;
 }
 
 .slider {
@@ -321,3 +332,118 @@ input:checked + label .buttonText{
     text-align: center;
     min-height: 5em;
 }
+
+/* ── 3D Display Panel ──────────────────────────────────────────────────── */
+.display3D {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100vh - 9vh - 20px);
+    position: relative;
+}
+
+#container3D {
+    flex: 1;
+    position: relative;
+}
+
+#container3D canvas {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 5px;
+}
+
+/* Floating control panel on the right of the 3D view */
+.sliderPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 16px 16px;
+    background: rgba(26, 26, 31, 0.92);
+    backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    min-width: 360px;
+    z-index: 10;
+}
+
+.sliderPanelTitle {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    align-self: flex-start;
+    padding-left: 4px;
+}
+
+/* Override base .sliderContainer for this context */
+.sliderPanel .sliderContainer {
+    flex-direction: row;
+    gap: 0;
+    background: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    justify-content: space-around;
+}
+
+/* One slider + its label/value */
+.sliderGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Live value readout above the slider */
+.sliderVal {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgb(255, 198, 42);
+    min-width: 36px;
+    text-align: center;
+    writing-mode: horizontal-tb;
+}
+
+/* Parameter name below the slider */
+.sliderLabel {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.55);
+    text-align: center;
+    writing-mode: horizontal-tb;
+    white-space: nowrap;
+}
+
+/* Greyed out for TBD / future-use sliders */
+.sliderLabelTbd {
+    color: rgba(255, 255, 255, 0.22);
+}
+
+.sliderPanel .slider:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+/* Run Model button */
+.runBtn {
+    width: 100%;
+    padding: 0.65rem 0;
+    background: rgb(255, 198, 42);
+    color: black;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+}
+
+.runBtn:hover  { background: #ffd060; }
+.runBtn:active { transform: scale(0.98); }

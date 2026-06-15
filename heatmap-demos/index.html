@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heatmap Rendering Demos</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap');
+    body { background: rgb(26,26,31); color: white; font-family: 'Syne', sans-serif;
+           display: flex; flex-direction: column; align-items: center;
+           justify-content: center; min-height: 100vh; margin: 0; gap: 2rem; }
+    h1   { font-size: 2.5rem; font-weight: 800; margin-bottom: 0; }
+    p    { font-family: 'DM Sans', sans-serif; color: rgba(255,255,255,0.6);
+           max-width: 600px; text-align: center; font-size: 1.1rem; margin: 0; }
+    .cards { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+    .card  { background: rgb(36,39,46); border-radius: 16px; padding: 2.5rem 2rem;
+             width: 280px; display: flex; flex-direction: column; gap: 1rem;
+             border: 1px solid rgba(255,255,255,0.08); transition: transform 0.2s, border-color 0.2s; }
+    .card:hover { transform: translateY(-4px); border-color: rgb(255,198,42); }
+    .card h2   { font-size: 1.4rem; font-weight: 700; margin: 0; color: rgb(255,198,42); }
+    .card p    { font-family: 'DM Sans', sans-serif; color: rgba(255,255,255,0.55);
+                 font-size: 0.95rem; margin: 0; }
+    .card .tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+                 color: rgba(255,255,255,0.35); text-transform: uppercase; }
+    a { text-decoration: none; color: inherit; }
+    .btn { margin-top: auto; background: rgb(255,198,42); color: black; border: none;
+           border-radius: 8px; padding: 0.7rem 1.4rem; font-family: 'Syne', sans-serif;
+           font-weight: 700; font-size: 1rem; cursor: pointer; text-align: center;
+           transition: background 0.2s; }
+    .btn:hover { background: #ffd060; }
+  </style>
+</head>
+<body>
+  <h1>Brain Heatmap — Rendering Demos</h1>
+  <p>Two approaches for mapping sparse electrode values onto a continuous brain surface.
+     Neither demo touches the original project files.</p>
+  <div class="cards">
+
+    <div class="card">
+      <div class="tag">Approach 1</div>
+      <h2>Vertex Coloring</h2>
+      <p>IDW interpolation computed in JavaScript per-vertex, stored in a BufferAttribute.
+         GPU handles interpolation across faces. Simple and fast to set up.</p>
+      <a href="vertex-coloring/index.html"><div class="btn">Open Demo →</div></a>
+    </div>
+
+    <div class="card">
+      <div class="tag">Approach 2</div>
+      <h2>Fragment Shader</h2>
+      <p>Electrode positions + values packed into a DataTexture. IDW and viridis
+         colormap computed per-fragment in GLSL. Resolution-independent, smooth gradients.</p>
+      <a href="fragment-shader/index.html"><div class="btn">Open Demo →</div></a>
+    </div>
+
+  </div>
+</body>
+</html>
