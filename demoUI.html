@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="demoUI.css">
     <script src="BMI.js"></script>
-    <script src="calculator.js"></script>
-    <title> Computational Neuroscience </title>
+    <script src="componentAnalysis.js" type="module"></script>
+    <script src="network.js" defer></script>
+    <title> Makin Computational Neuroscience Lab </title>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
                                 for machine learning from animal learning; and ultimately to improve our understanding of
                                  the brain and to ameliorate neurological disorders in people.
                                 <ul>
-                                        <li> This is what a list item looks like </li>
+                                        <li> Speech Decoding </li>
 
                                         <li> More can be added </li>
 
@@ -45,31 +46,38 @@
                         <div class = 'buttonText'> 
                                 Train an NN!
                         </div>
-                            <!-- Neural Network Training-->
-                        <div class = 'nncont'>
-                                <div class = 'nntitle'>Do something cool!</div>
-                                <div class = 'nncolumn'>
-                                        <div class = 'modelRend'>
-                                                here
+                            <!-- Neural Network Training demo (from SubDemo) -->
+                        <div class="nnDemo">
+                                <div class="container">
+                                        <h1>Train a Neural Network</h1>
+
+                                        <div class="controls">
+                                                <label>
+                                                        Hidden layers (comma-separated):
+                                                        <input type="text" id="neurons" value="4, 4, 2">
+                                                </label>
+
+                                                <label>
+                                                        Learning rate:
+                                                        <input type="number" id="lr" value="0.03" step="0.01" min="0.001">
+                                                </label>
+
+                                                <label>
+                                                        Activation:
+                                                        <select id="act">
+                                                                <option>TanH</option>
+                                                                <option>ReLU</option>
+                                                                <option>Sigmoid</option>
+                                                                <option>GELU</option>
+                                                        </select>
+                                                </label>
+
+                                                <button id="train-btn">Train</button>
                                         </div>
-                                        <div class = 'sliderContainer'>
-                                                <input type="range" id="paramone" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramtwo" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramthr" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramfou" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramfiv" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramsix]" min="0" max="100" value="50" class="slider">
-                                        </div>
-                                </div>
-                                <div class = 'nncolumn'>
-                                        <div class = 'modelRend'>
-                                                two
-                                        </div>
-                                        <div class = 'sliderContainer'>
-                                                <input type="range" id="paramone" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramtwo" min="0" max="100" value="50" class="slider">
-                                                <input type="range" id="paramthr" min="0" max="100" value="50" class="slider">
-                                        </div>
+
+                                        <div id="status">Ready.</div>
+
+                                        <canvas id="boundary" width="400" height="400"></canvas>
                                 </div>
                         </div>
                 </label>
@@ -81,74 +89,114 @@
                 <input type= "radio" name = "cont" id = "3" value = "Display" class = "inputRad">
                 <label for="3">
                         <div class = 'buttonText'> 
-                        Interactive 3D Display
+                        Electrode Saliencies
                         </div>
 
-                        <!-- Interactive 3D Model + Training Parameter Controls -->
+                        <!-- Interactive 3D Model + buildModel parameter controls -->
                         <div class="display3D">
-                                <div id="container3D"></div>
 
-                                <div class="sliderPanel">
-                                        <div class="sliderPanelTitle">Model Parameters</div>
-
-                                        <div class="sliderContainer">
-
-                                                <!-- Epochs: 1–20 -->
-                                                <div class="sliderGroup">
-                                                        <span class="sliderVal" id="epochsVal">10</span>
-                                                        <input type="range" id="epochs" min="1" max="20" value="10" class="slider"
-                                                               oninput="document.getElementById('epochsVal').textContent=this.value">
-                                                        <span class="sliderLabel">Epochs</span>
+                                <!-- 3D canvas fills the top area -->
+                                <div class="display3DTop">
+                                        <div id="container3D"></div>
+                                        <button id="toggleElecBtn" class="toggleElecBtn">Electrodes ●</button>
+                                        <div class="pickerBar">
+                                                <div class="saliencyPicker">
+                                                        <span class="saliencyLabel">Saliency</span>
+                                                        <select id="saliencyMethod" class="saliencySelect"></select>
                                                 </div>
-
-                                                <!-- Decoder Embedding dim: 1–200 -->
-                                                <div class="sliderGroup">
-                                                        <span class="sliderVal" id="decEmbedVal">100</span>
-                                                        <input type="range" id="decEmbed" min="1" max="200" value="100" class="slider"
-                                                               oninput="document.getElementById('decEmbedVal').textContent=this.value">
-                                                        <span class="sliderLabel">Dec. Embed</span>
+                                                <div class="saliencyPicker colorSchemePicker">
+                                                        <span class="saliencyLabel">Color Scheme</span>
+                                                        <select id="colorScheme" class="saliencySelect"></select>
                                                 </div>
+                                        </div>
+                                </div>
 
-                                                <!-- Decoder RNN units: 1–800 -->
-                                                <div class="sliderGroup">
-                                                        <span class="sliderVal" id="decRNNVal">400</span>
-                                                        <input type="range" id="decRNN" min="1" max="800" value="400" class="slider"
-                                                               oninput="document.getElementById('decRNNVal').textContent=this.value">
-                                                        <span class="sliderLabel">Dec. RNN</span>
+                                <!-- buildModel params — one card per field, all side by side -->
+                                <div class="modelParamsRow">
+
+                                        <!-- encoderLayers -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Encoder Layers</span>
+                                                <div class="layerRow">
+                                                        <input type="number" id="encLay0" class="layerInput" min="1" max="4096" value="400">
+                                                        <span class="layerSep">›</span>
+                                                        <input type="number" id="encLay1" class="layerInput" min="1" max="4096" value="400">
+                                                        <span class="layerSep">›</span>
+                                                        <input type="number" id="encLay2" class="layerInput" min="1" max="4096" value="400">
                                                 </div>
+                                        </div>
 
-                                                <!-- Learning Rate — range/encoding TBD -->
-                                                <div class="sliderGroup">
-                                                        <span class="sliderVal" id="lrVal">—</span>
-                                                        <input type="range" id="lr" min="0" max="100" value="50" class="slider"
-                                                               disabled
-                                                               oninput="document.getElementById('lrVal').textContent=this.value">
-                                                        <span class="sliderLabel sliderLabelTbd">LR (TBD)</span>
+                                        <div class="paramDivider"></div>
+
+                                        <!-- encEmbedding -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Enc. Embed</span>
+                                                <input type="number" id="encEmbed" class="paramNumInput" min="1" max="512" value="64">
+                                        </div>
+
+                                        <div class="paramDivider"></div>
+
+                                        <!-- decoderLayers -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Decoder Layers</span>
+                                                <div class="layerRow">
+                                                        <input type="number" id="decLay0" class="layerInput" min="1" max="4096" value="800">
+                                                        <span class="layerSep">›</span>
+                                                        <input type="number" id="decLay1" class="layerInput" min="1" max="4096" placeholder="—">
+                                                        <span class="layerSep">›</span>
+                                                        <input type="number" id="decLay2" class="layerInput" min="1" max="4096" placeholder="—">
                                                 </div>
+                                        </div>
 
-                                                <!-- Param 5 — unlabelled, configurable later -->
-                                                <div class="sliderGroup">
-                                                        <span class="sliderVal" id="param5Val">—</span>
-                                                        <input type="range" id="param5" min="0" max="100" value="50" class="slider"
-                                                               disabled
-                                                               oninput="document.getElementById('param5Val').textContent=this.value">
-                                                        <span class="sliderLabel sliderLabelTbd">—</span>
-                                                </div>
+                                        <div class="paramDivider"></div>
 
-                                                <!-- Param 6 — unlabelled, configurable later -->
-                                                <div class="sliderGroup">
-                                                        <span class="sliderVal" id="param6Val">—</span>
-                                                        <input type="range" id="param6" min="0" max="100" value="50" class="slider"
-                                                               disabled
-                                                               oninput="document.getElementById('param6Val').textContent=this.value">
-                                                        <span class="sliderLabel sliderLabelTbd">—</span>
-                                                </div>
+                                        <!-- decEmbedding -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Dec. Embed</span>
+                                                <input type="number" id="decEmbedNew" class="paramNumInput" min="1" max="512" value="64">
+                                        </div>
 
-                                        </div><!-- /sliderContainer -->
+                                        <div class="paramDivider"></div>
 
-                                        <button class="runBtn" id="runModelBtn">Run Model</button>
+                                        <!-- temperature → lr  (log scale: 1e-3 at 0, 1e-1 at 1) -->
+                                        <div class="paramCard paramCardSlider">
+                                                <span class="paramCardLabel">Learning Rate</span>
+                                                <span class="paramCardVal" id="lrDisplay">0.01</span>
+                                                <input type="range" id="temperature" class="paramSlider"
+                                                       min="0" max="1" step="0.01" value="0.5">
+                                                <span class="paramCardSub" id="tempDisplay">temperature = 0.50</span>
+                                        </div>
 
-                                </div><!-- /sliderPanel -->
+                                        <div class="paramDivider"></div>
+
+                                        <!-- typeModel -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Model Type</span>
+                                                <select id="typeModel" class="paramSelect">
+                                                        <option value="RNN">RNN</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="paramDivider"></div>
+
+                                        <!-- subject — 401 only for now -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Subject</span>
+                                                <input type="number" id="subjectId" class="paramNumInput" value="401" disabled>
+                                        </div>
+
+                                        <div class="paramDivider"></div>
+
+                                        <!-- epochs — capped at 100 -->
+                                        <div class="paramCard">
+                                                <span class="paramCardLabel">Epochs</span>
+                                                <input type="number" id="numEpochs" class="paramNumInput" min="1" max="100" value="10">
+                                        </div>
+
+                                        <button class="runBtn runBtnInline" id="runModelBtn">Run Model</button>
+
+                                </div><!-- /modelParamsRow -->
+
                         </div><!-- /display3D -->
                 </label>
                 <script src="3D.js" type="module"></script>
@@ -157,43 +205,63 @@
                 <!-- Something Else-->  
         <!-- Home-->
         <div class = 'topPanel'>
-                <input type= "radio" name = "cont" id = "4" value = "Something" class = "inputRad">
+                <input type= "radio" name = "cont" id = "4" value = "Component" class = "inputRad">
                 <label for="4">
-                        <div class = 'buttonText'> 
-                                Something Else!
+                        <div class = 'buttonText'>
+                                Dimensionality Reduction
                         </div>
-                             <!-- Toy Problems? Something like that-->
-                        <div class = "infoTag">
-                                <h2>Calculator!</h2>
-                                <br>
-                                <div class="calcDisp" id = "calcDisp">
-                                        0
-                                </div>
-                                <br>
-                                <input type="button" value="1" class = calcButton onclick="pressButton('1')">
-                                <input type="button" value="2" class = calcButton onclick="pressButton('2')">
-                                <input type="button" value="3" class = calcButton onclick="pressButton('3')">
-                                <input type="button" value="+" class = calcButton onclick="pressButton('+')">
-                                <br>
-                                <input type="button" value="4" class = calcButton onclick="pressButton('4')">
-                                <input type="button" value="5" class = calcButton onclick="pressButton('5')">
-                                <input type="button" value="6" class = calcButton onclick="pressButton('6')">
-                                <input type="button" value="-" class = calcButton onclick="pressButton('-')">
-                                <br>
-                                <input type="button" value="7" class = calcButton onclick="pressButton('7')">
-                                <input type="button" value="8" class = calcButton onclick="pressButton('8')">
-                                <input type="button" value="9" class = calcButton onclick="pressButton('9')">
-                                <input type="button" value="x" class = calcButton onclick="pressButton('x')">
-                                <br>
-                                <input type="button" value="." class = calcButton onclick="pressButton('.')">
-                                <input type="button" value="0" class = calcButton onclick="pressButton('0')">
-                                <input type="button" value="=" class = calcButton onclick="pressButton('=')">
-                                <input type="button" value="÷" class = calcButton onclick="pressButton('÷')">
-                                <br>
-                                <input type="button" value="C" class = calcButton onclick="pressButton('C')">
-                                <br>
 
-                        </div>
+                        <!-- Component Analysis: dimensionality-reduction controls + plot -->
+                        <div class="componentAnalysis">
+
+                                <!-- Control row: dropdowns drive the analysis request -->
+                                <div class="caControls">
+
+                                        <div class="caField">
+                                                <label class="caLabel" for="caMethod">Method</label>
+                                                <select id="caMethod" class="caSelect">
+                                                        <option value="pca">Principal Component Analysis</option>
+                                                        <option value="tsne">T-Distributed Stochastic Neighbor Embedding</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="caField">
+                                                <label class="caLabel" for="caDimensions">Dimensions</label>
+                                                <select id="caDimensions" class="caSelect">
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="caField">
+                                                <label class="caLabel" for="caLayer">Layer</label>
+                                                <select id="caLayer" class="caSelect">
+                                                        <option value="input">Input</option>
+                                                        <option value="encoder1">Encoder 1</option>
+                                                        <option value="encoder2">Encoder 2</option>
+                                                        <option value="encoder3">Encoder 3</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="caField">
+                                                <label class="caLabel" for="caLabels">Labels</label>
+                                                <select id="caLabels" class="caSelect">
+                                                        <option value="none">None</option>
+                                                        <option value="time">Time</option>
+                                                        <option value="phoneme">Phoneme</option>
+                                                        <option value="word">Word</option>
+                                                </select>
+                                        </div>
+
+                                </div><!-- /caControls -->
+
+                                <!-- Plot region: future home of the scrollable / zoomable /
+                                     3D-rotatable embedding display (rendered by JS later) -->
+                                <div class="caPlot" id="caPlot">
+                                        <span class="caPlotPlaceholder">Plot will render here</span>
+                                </div>
+
+                        </div><!-- /componentAnalysis -->
                 </label>
         </div>
 

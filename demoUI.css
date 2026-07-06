@@ -4,6 +4,8 @@ body {
     background-color: rgb(26, 26, 31);
     font-size: 1rem;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 :root {
@@ -13,6 +15,12 @@ body {
     --text-2:   rgba(255, 255, 255, 0.6);
     --accent:   rgba(18, 18, 21, 0.754);
 }
+
+/* Slim scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
 
 .buttons {
     height: 80vh;
@@ -42,6 +50,10 @@ label {
     transition: 0.25s;
 }
 
+label:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
 .topPanel {
     justify-content: center;
     margin: 2px;
@@ -59,7 +71,7 @@ label {
     margin: 10px;
     padding: 5px;
     border-radius: 10px;
-    height: 64px;
+    height: 52px;
     justify-content: center;
     box-sizing: border-box;
     cursor: pointer;
@@ -68,13 +80,15 @@ label {
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
+    letter-spacing: -0.02em;
     transition: 0.25s;
 }
 
 input:checked + label {
     z-index: 9999;
-    background-color: rgb(255, 198, 42);
-    border-left: 3px solid rgb(255,198,42);
+    background: linear-gradient(160deg, rgb(255, 212, 70), rgb(242, 180, 10));
+    border-left: 3px solid rgb(255, 198, 42);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 4px 18px rgba(255,198,42,0.2);
 }
 
 input:checked + label .infoTag,
@@ -82,7 +96,7 @@ input:checked + label .Model,
 input:checked + label > div:not(.buttonText):not(.nncont){
     display: block;
     position: absolute;
-    top: 64px;
+    top: 52px;
     left: 5%;   
     width: 90%;
     margin-top: 5rem;
@@ -93,7 +107,7 @@ input:checked + label > div:not(.buttonText):not(.nncont){
 input:checked + label .nncont{
     display: flex;
     position: absolute;
-    top: 64px;
+    top: 52px;
     left: 5%;   
     width: 90%;
     margin-top: 5rem;
@@ -138,42 +152,6 @@ input:checked + label .buttonText{
     border-radius: 16px;
     margin: 40px;
 }
-
-/*Calculator Things */
-.calcDisp {
-    font-size: 60px;
-    color:red;
-    width: 80%;
-    padding: 1%;
-    margin: 0 auto;
-
-    height: fit-content;
-    background-color:black;
-    justify-content: center;
-}
-.calcButton {
-    font-size: 2rem;
-    font-weight: 1000;
-    background-color: whitesmoke;
-    width: 6%;
-    aspect-ratio: 1;
-    border-radius: 30%;
-    border-color: black;
-    border-width: 10px;
-    cursor: pointer;
-}
-
-.dummyb {
-    visibility: hidden;
-    background:none;
-    width: 100px;
-    height: 100px;
-}
-
-.calcButton:active {
-    background-color: hsl(46, 100%, 55%);
-}
-
 
 /*Neural Network Interface Stuff*/
 
@@ -333,18 +311,133 @@ input:checked + label .buttonText{
     min-height: 5em;
 }
 
+/* ── Component Analysis Panel ──────────────────────────────────────────── */
+/* Row layout: dropdowns stacked on the left, square plot filling the height
+   on the right. */
+.componentAnalysis {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;   /* center the square in the full panel */
+    width: 100%;
+    position: relative;
+}
+
+/* The active-tab rule forces panel roots to display:block and pushes them down
+   with margin-top; override (higher specificity) to restore the flex row and
+   sit the panel just under the tabs so the square fills the area without
+   needing to scroll. */
+input:checked + label > div.componentAnalysis:not(.buttonText):not(.nncont) {
+    display: flex;
+    top: 64px;
+    margin-top: 24px;
+    height: calc(100vh - 112px);
+}
+
+/* Left column: the four dropdowns stacked vertically. */
+.caControls {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+    width: 220px;
+    position: absolute;      /* float as a left sidebar so it doesn't shift the centered square */
+    left: 0;
+    top: 0;
+}
+
+/* One label-over-dropdown stack. */
+.caField {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    text-align: left;
+}
+
+/* Bigger-than-standard, viewport-dynamic labels.
+   clamp() scales the size with the window while staying within bounds. */
+.caLabel {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.05rem, 1.5vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-1);
+    white-space: nowrap;
+}
+
+/* Dropdowns themselves, matching the dark theme used elsewhere. */
+.caSelect {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.85rem, 1vw, 1.1rem);
+    font-weight: 500;
+    padding: 0.5rem 0.85rem;
+    width: 100%;
+    min-width: 0;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+.caSelect:hover { border-color: rgba(255, 255, 255, 0.28); }
+.caSelect:focus { border-color: rgba(255, 198, 42, 0.55); }
+.caSelect option { background: rgb(36, 39, 46); color: #fff; }
+
+/* Plot region — future scrollable / zoomable / 3D-rotatable display.
+   overflow:hidden + position:relative ready it to host a canvas/renderer. */
+.caPlot {
+    /* Largest square that fits the panel height while leaving room for the
+       floating 240px controls on both notional sides (≈500px), so the square
+       stays centered without overlapping the sidebar or forcing a scroll. */
+    height: min(calc(100vh - 112px), calc(90vw - 460px));
+    aspect-ratio: 1 / 1;     /* square: width = that height */
+    flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: #0e0e12;
+    background-color: white;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.caPlotPlaceholder {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.8rem, 1vw, 1.05rem);
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
 /* ── 3D Display Panel ──────────────────────────────────────────────────── */
 .display3D {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     height: calc(100vh - 9vh - 20px);
     position: relative;
 }
 
-#container3D {
-    flex: 1;
+/* Top area: 3D canvas takes all space above the params row.
+   height: calc(100% - 110px) works in both flex and block contexts,
+   since the checked-label rule forces display3D to display:block. */
+.display3DTop {
+    height: calc(100% - 94px);
     position: relative;
+}
+
+#container3D {
+    position: absolute;
+    inset: 0;
 }
 
 #container3D canvas {
@@ -353,97 +446,318 @@ input:checked + label .buttonText{
     border-radius: 5px;
 }
 
-/* Floating control panel on the right of the 3D view */
-.sliderPanel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 20px 16px 16px;
-    background: rgba(26, 26, 31, 0.92);
-    backdrop-filter: blur(10px);
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
-    min-width: 360px;
+.toggleElecBtn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
     z-index: 10;
+    background: rgba(22, 22, 27, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.toggleElecBtn:hover {
+    background: rgba(40, 40, 48, 0.75);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.22);
+}
+.toggleElecBtn.hidden {
+    color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.06);
 }
 
-.sliderPanelTitle {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.45);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    align-self: flex-start;
-    padding-left: 4px;
-}
-
-/* Override base .sliderContainer for this context */
-.sliderPanel .sliderContainer {
-    flex-direction: row;
-    gap: 0;
-    background: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    justify-content: space-around;
-}
-
-/* One slider + its label/value */
-.sliderGroup {
+/* ── Saliency method picker (overlay, top-left of the 3D canvas) ──────────── */
+/* Holds the Saliency + Color Scheme pickers side by side in the top-left. */
+.pickerBar {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    z-index: 10;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+/* Inside the bar, pickers flow with flex instead of each absolutely stacking. */
+.pickerBar .saliencyPicker {
+    position: static;
+    top: auto;
+    left: auto;
+}
+
+.saliencyPicker {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    z-index: 10;
+    display: flex;
     align-items: center;
     gap: 8px;
+    background: rgba(22, 22, 27, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 5px 10px;
 }
-
-/* Live value readout above the slider */
-.sliderVal {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: rgb(255, 198, 42);
-    min-width: 36px;
-    text-align: center;
-    writing-mode: horizontal-tb;
-}
-
-/* Parameter name below the slider */
-.sliderLabel {
+.saliencyLabel {
+    color: rgba(255, 255, 255, 0.55);
     font-family: 'DM Sans', sans-serif;
     font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.55);
-    text-align: center;
-    writing-mode: horizontal-tb;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.saliencySelect {
+    background: rgba(40, 40, 48, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.saliencySelect:hover  { border-color: rgba(255, 255, 255, 0.28); }
+.saliencySelect:focus  { border-color: rgba(255, 198, 42, 0.55); }
+
+/* ── buildModel parameter row ───────────────────────────────────────────── */
+.modelParamsRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 12px;
+    height: 94px;
+    flex-shrink: 0;
+    background: rgba(22, 22, 27, 0.97);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    overflow-x: auto;
+    gap: 0;
+}
+
+.paramCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 10px;
+    flex-shrink: 0;
+}
+
+.paramCardLabel {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.38);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     white-space: nowrap;
 }
 
-/* Greyed out for TBD / future-use sliders */
-.sliderLabelTbd {
-    color: rgba(255, 255, 255, 0.22);
+.paramNumInput {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 5px 6px;
+    width: 70px;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+    transition: border-color 0.15s;
+}
+.paramNumInput:focus    { border-color: rgba(255, 198, 42, 0.55); }
+.paramNumInput:disabled { opacity: 0.35; cursor: not-allowed; }
+.paramNumInput::-webkit-outer-spin-button,
+.paramNumInput::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.layerRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
 }
 
-.sliderPanel .slider:disabled {
-    opacity: 0.2;
-    cursor: not-allowed;
+.layerInput {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 5px 3px;
+    width: 50px;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+    transition: border-color 0.15s;
+}
+.layerInput:focus        { border-color: rgba(255, 198, 42, 0.55); }
+.layerInput::placeholder { color: rgba(255, 255, 255, 0.18); font-size: 1rem; }
+.layerInput::-webkit-outer-spin-button,
+.layerInput::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.layerSep {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 1rem;
+    user-select: none;
+}
+
+.paramCardSlider { min-width: 120px; }
+
+.paramCardVal {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgb(255, 198, 42);
+    text-align: center;
+}
+
+.paramSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 96px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+.paramSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: rgb(255, 198, 42);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.paramSlider::-webkit-slider-thumb:hover { transform: scale(1.25); }
+
+.paramCardSub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.28);
+    white-space: nowrap;
+}
+
+.paramSelect {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+.paramSelect:focus { border-color: rgba(255, 198, 42, 0.55); }
+
+.paramDivider {
+    width: 1px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.07);
+    flex-shrink: 0;
 }
 
 /* Run Model button */
 .runBtn {
-    width: 100%;
-    padding: 0.65rem 0;
+    padding: 0.6rem 1.4rem;
     background: rgb(255, 198, 42);
     color: black;
     border: none;
     border-radius: 8px;
     font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
-    margin-top: 4px;
+    white-space: nowrap;
 }
-
 .runBtn:hover  { background: #ffd060; }
 .runBtn:active { transform: scale(0.98); }
+
+.runBtnInline {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* ── Neural Network Training Demo (Train an NN tab, moved from SubDemo) ───── */
+/* Scoped under .nnDemo so the demo's original global rules (body/button/input/
+   canvas) don't leak into the rest of the page. */
+.nnDemo {
+    color: #eee;
+    font-family: sans-serif;
+}
+.nnDemo .container {
+    max-width: 500px;
+    margin: 0 auto;             /* center the card (parent is display:block here) */
+    padding: 2rem;
+    background: #1e1e24;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+.nnDemo h1 {
+    font-size: 1.6rem;
+    margin: 0 0 1rem;
+}
+.nnDemo .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.nnDemo .controls label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.nnDemo input,
+.nnDemo select {
+    padding: 0.3rem;
+    background: #2a2a32;
+    color: #eee;
+    border: 1px solid #555;
+    border-radius: 4px;
+}
+.nnDemo button {
+    padding: 0.5rem 1rem;
+    background: #4f349e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.nnDemo button:hover    { background: #6543c4; }
+.nnDemo button:disabled { background: #555; cursor: not-allowed; }
+.nnDemo #status {
+    margin-bottom: 1rem;
+    font-style: italic;
+    min-height: 1.5em;
+}
+.nnDemo canvas {
+    border: 1px solid #555;
+    background: white;
+    display: block;
+}
